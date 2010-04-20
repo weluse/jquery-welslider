@@ -49,7 +49,7 @@
 /*jslint white: true, onevar: true, browser: true, undef: true, nomen: false, eqeqeq: true, plusplus: true, bitwise: true, regexp: true, strict: true, newcap: true */
 "use strict";
 
-$.widget('ui.welSlideshow', {
+$.widget('ui.welSlider', {
     options: {
         navigationClass: 'slideshow-nav',
         wrapperClass: 'slideshow',
@@ -73,10 +73,7 @@ $.widget('ui.welSlideshow', {
         this.index = 0;
         this.count = this.element.find("> li").length;
 
-        if (this.options.autoSlide > 0) {
-            // We do this manually.
-            // this.startAutoslide();
-        }
+        this.startAutoslide();
     },
 
     _createWrapper: function () {
@@ -88,7 +85,7 @@ $.widget('ui.welSlideshow', {
 
     _createNavigation: function () {
         var that = this;
-        this._wrapper.append(
+        this._wrapper.prepend(
             $("<div />", {
                 'class': this.options.navigationClass
             }).append(
@@ -144,6 +141,10 @@ $.widget('ui.welSlideshow', {
 
     startAutoslide: function () {
         var that = this;
+
+        if (!this.options.autoSlide) {
+            return;
+        }
         this.element.data('autoslideInterval', window.setInterval(function () {
             that.next();
         }, this.options.autoSlide));

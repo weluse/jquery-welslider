@@ -63,3 +63,11 @@ Why the jQuery UI dependency?
 
 I just really like the Widget API it provides. If you don't like another
 dependency I'm sorry but you'll have to search on.
+
+I want feature X!
+-----------------
+
+Probably not going to happen. Have a look at galleryview_. The code it clean and
+it provides lots of cool features.
+
+.. _galleryview: http://spaceforaname.com/galleryview/

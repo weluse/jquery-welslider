@@ -1,0 +1,35 @@
+.slideshow {
+  width: 500px;
+  overflow: hidden; }
+  .slideshow ul {
+    padding: 0;
+    margin: 0; }
+  .slideshow > ul {
+    width: 9800px;
+    list-style: none; }
+    .slideshow > ul li {
+      width: 500px;
+      float: left; }
+  .slideshow .slideshow-nav .next, .slideshow .slideshow-nav .previous {
+    float: left;
+    display: block;
+    width: 22px;
+    height: 22px;
+    background: transparent url("icon_leftarrow.gif") scroll no-repeat 0 0; }
+    .slideshow .slideshow-nav .next.next, .slideshow .slideshow-nav .previous.next {
+      float: right;
+      background: transparent url("icon_rightarrow.gif") scroll no-repeat 0 0; }
+    .slideshow .slideshow-nav .next:hover, .slideshow .slideshow-nav .previous:hover {
+      background-position: 0 -22px; }
+  .slideshow .slideshow-nav ul {
+    list-style: none;
+    text-align: center; }
+    .slideshow .slideshow-nav ul li {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      margin-right: 5px;
+      background: transparent url("icon_slides.png") scroll no-repeat 0 0;
+      cursor: pointer; }
+      .slideshow .slideshow-nav ul li.active {
+        background-position: 0 -10px; }

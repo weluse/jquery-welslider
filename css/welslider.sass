@@ -1,0 +1,51 @@
+// Adjust this to your image size. Necessary to allow sliding within the
+// container.
+$slideshow_width: 500px
+
+.slideshow
+  width: $slideshow_width
+  overflow: hidden
+
+  ul
+    padding: 0
+    margin: 0
+
+  > ul
+    width: 9800px
+    list-style: none
+
+    li
+      width: $slideshow_width
+      float: left
+  
+  .slideshow-nav
+    .next, .previous
+      float: left
+      display: block
+      width: 22px
+      height: 22px
+
+      background: transparent url("icon_leftarrow.gif") scroll no-repeat 0 0
+
+      &.next
+        float: right
+        background: transparent url("icon_rightarrow.gif") scroll no-repeat 0 0
+
+      &:hover
+        background-position: 0 -22px
+
+    ul
+      list-style: none
+      text-align: center
+
+      li
+        display: inline-block
+        width: 10px
+        height: 10px
+        margin-right: 5px
+
+        background: transparent url("icon_slides.png") scroll no-repeat 0 0
+        cursor: pointer
+
+        &.active
+          background-position: 0 -10px
