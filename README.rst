@@ -47,17 +47,6 @@ Requirements
 FAQ
 ===
 
-Why yet another one?
---------------------
-
-Because most of the existing plugins just suck. Take simpleslide_ for example.
-The website really rocks, but the code utilizes global state is not a jQuery
-plugin at all. No offense, my code is far from being perfect and it looked
-exactly like this when I started, but I don't want to use code like this in
-projects I work on.
-
-.. _simpleslide: http://simplesli.de/
-
 Why the jQuery UI dependency?
 -----------------------------
 
@@ -67,7 +56,11 @@ dependency I'm sorry but you'll have to search on.
 I want feature X!
 -----------------
 
-Probably not going to happen. Have a look at galleryview_. The code it clean and
-it provides lots of cool features.
+Probably not going to happen. This plugin is supposed to be really small.
+However, there are great alternatives out there that are worth checking out that
+have lots of cool features:
 
-.. _galleryview: http://spaceforaname.com/galleryview/
+ * `Nivo Slider <http://nivo.dev7studios.com/>`_
+ * `GalleryView <http://spaceforaname.com/galleryview/>`_
+ * `SimpleSlide <http://simplesli.de>`_
+ * `AD Gallery <http://coffeescripter.com/code/ad-gallery/>`_
