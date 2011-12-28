@@ -40,156 +40,165 @@
  *  - jQuery 1.4+
  *  - jQuery UI 1.8+ (core + widget)
  *
- * :copyright: 2010, weluse (http://weluse.de/)
+ * :copyright: 2010 - 2011, weluse (http://weluse.de/)
  * :author: Pascal Hartig <phartig@weluse.de>
  * :license: BSD, see LICENSE for more details.
  */
 
 /*global $, window */
-/*jslint white: true, onevar: true, browser: true, undef: true, nomen: false, eqeqeq: true, plusplus: true, bitwise: true, regexp: true, strict: true, newcap: true */
-"use strict";
+/*jslint
+    white: true, onevar: true, undef: true, newcap: true regexp: true,
+    plusplus: true, bitwise: true, strict: true, maxerr: 50, maxlen: 78,
+    indent: 4
+*/
+(function () {
+    "use strict";
 
-$.widget('ui.welSlider', {
-    options: {
-        navigationClass: 'slideshow-nav',
-        wrapperClass: 'slideshow',
-        autoSlide: 0,
-        slidingDuration: 1000,
-        showNavigation: true,
-        showControls: true,
-        easing: 'swing'
-    },
+    $.widget('ui.welSlider', {
+        options: {
+            navigationClass: 'slideshow-nav',
+            wrapperClass: 'slideshow',
+            autoSlide: 0,
+            slidingDuration: 1000,
+            showNavigation: true,
+            showControls: true,
+            easing: 'swing'
+        },
 
-    _create: function () {
-        this._wrapper = this._createWrapper();
+        _create: function () {
+            this._wrapper = this._createWrapper();
 
-        if (this.options.showNavigation) {
-            this._createNavigation();
-            if (this.options.showControls) {
-                this._createControls();
-            }
-        }
-
-        this.index = 0;
-        this.count = this.element.find("> li").length;
-
-        this.startAutoslide();
-    },
-
-    _createWrapper: function () {
-        var $wrapper = $("<div />", {
-            'class': this.options.wrapperClass
-        });
-        return this.element.wrap($wrapper).parent();
-    },
-
-    _createNavigation: function () {
-        var that = this;
-        this._wrapper.prepend(
-            $("<div />", {
-                'class': this.options.navigationClass
-            }).append(
-                $("<a />", {
-                    'class': "previous",
-                    href: "#",
-                    click: function () {
-                        that.previous();
-                        return false;
-                    }
-                })
-            ).append(
-                $("<a />", {
-                    'class': "next",
-                    href: "#",
-                    click: function () {
-                        that.next();
-                        return false;
-                    }
-                })
-            )
-        );
-    },
-
-    /**
-     * Creates those tiny little bulps between the navigation arrows.
-     */
-    _createControls: function () {
-        var that = this,
-            $nav = this._wrapper.find("." + this.options.navigationClass),
-            $controls = $("<ul />", {
-                'class': 'controls'
-            }).appendTo($nav);
-
-        $(this.element.find("> li")).each(function (i) {
-            var className = (i === 0 ? 'active' : '');
-
-            $controls.append($("<li />", {
-                'class': className,
-                click: function () {
-                    that.goto(i);
-                    return false;
+            if (this.options.showNavigation) {
+                this._createNavigation();
+                if (this.options.showControls) {
+                    this._createControls();
                 }
-            }));
-        });
-    },
+            }
 
-    _selectDot: function (index) {
-        this._wrapper.find(".controls").
-            find(".active").removeClass("active").end().
-            find("li").eq(index).addClass("active");
-    },
+            this.index = 0;
+            this.count = this.element.find("> li").length;
 
-    startAutoslide: function () {
-        var that = this;
+            if (this.options.autoSlide > 0) {
+                this.startAutoslide();
+            }
+        },
 
-        if (!this.options.autoSlide) {
-            return;
+        _createWrapper: function () {
+            var $wrapper = $("<div />", {
+                'class': this.options.wrapperClass
+            });
+            return this.element.wrap($wrapper).parent();
+        },
+
+        _createNavigation: function () {
+            var that = this;
+            this._wrapper.append(
+                $("<div />", {
+                    'class': this.options.navigationClass
+                }).append(
+                    $("<a />", {
+                        'class': "previous",
+                        href: "#",
+                        click: function () {
+                            that.previous();
+                            return false;
+                        }
+                    })
+                ).append(
+                    $("<a />", {
+                        'class': "next",
+                        href: "#",
+                        click: function () {
+                            that.next();
+                            return false;
+                        }
+                    })
+                )
+            );
+        },
+
+        /**
+        * Creates those tiny little bulps between the navigation arrows.
+        */
+        _createControls: function () {
+            var that = this,
+                $nav = this._wrapper.find("." + this.options.navigationClass),
+                $controls = $("<ul />", {
+                    'class': 'controls'
+                }).appendTo($nav);
+
+            $(this.element.find("> li")).each(function (i) {
+                var className = (i === 0 ? 'active' : '');
+
+                $controls.append($("<li />", {
+                    'class': className,
+                    click: function () {
+                        that.gotoEl(i);
+                        return false;
+                    }
+                }));
+            });
+        },
+
+        _selectDot: function (index) {
+            this._wrapper.find(".controls").
+                find(".active").removeClass("active").end().
+                find("li").eq(index).addClass("active");
+        },
+
+        startAutoslide: function () {
+            var that = this;
+
+            this.element.data(
+                'autoslideInterval',
+                window.setInterval(function () {
+                    that.next();
+                }, this.options.autoSlide)
+            );
+        },
+
+        stopAutoslide: function () {
+            window.clearInterval(this.element.data('autoslideInterval'));
+        },
+
+        resetAutoslide: function () {
+            this.stopAutoslide();
+            this.startAutoslide();
+        },
+
+        previous: function () {
+            if (this.index > 0) {
+                this.gotoEl(this.index - 1);
+            } else {
+                this.gotoEl(this.count - 1);
+            }
+        },
+
+        next: function () {
+            if (this.index < this.count - 1) {
+                this.gotoEl(this.index + 1);
+            } else {
+                this.gotoEl(0);
+            }
+        },
+
+        gotoEl: function (index) {
+            var marginLeft;
+            // Prevent the user from being "slided away" right
+            // after their click.
+            this.resetAutoslide();
+
+            this.index = index;
+            marginLeft = index * this.element.find("li").eq(0).innerWidth();
+
+            this.element.animate({
+                'margin-left': -1 * marginLeft
+            }, {
+                queue: false,
+                easing: this.options.easing
+            }, this.options.slidingDuration);
+
+            this._selectDot(index);
         }
-        this.element.data('autoslideInterval', window.setInterval(function () {
-            that.next();
-        }, this.options.autoSlide));
-    },
-
-    stopAutoslide: function () {
-        window.clearInterval(this.element.data('autoslideInterval'));
-    },
-
-    resetAutoslide: function () {
-        this.stopAutoslide();
-        this.startAutoslide();
-    },
-
-    previous: function () {
-        if (this.index > 0) {
-            this.goto(this.index - 1);
-        } else {
-            this.goto(this.count - 1);
-        }
-    },
-
-    next: function () {
-        if (this.index < this.count - 1) {
-            this.goto(this.index + 1);
-        } else {
-            this.goto(0);
-        }
-    },
-
-    goto: function (index) {
-        var marginLeft;
-        // Prevent the user from being "slided away" right after their click.
-        this.resetAutoslide();
-
-        this.index = index;
-        marginLeft = index * this.element.find("li").eq(0).innerWidth();
-
-        this.element.animate({
-            'margin-left': -1 * marginLeft
-        }, {
-            queue: false,
-            easing: this.options.easing
-        }, this.options.slidingDuration);
-
-        this._selectDot(index);
-    }
-});
+    });
+}());
