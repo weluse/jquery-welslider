@@ -66,6 +66,7 @@
         },
 
         _create: function () {
+            this._origStyle = this.element.attr('style');
             this._wrapper = this._createWrapper();
 
             if (this.options.showNavigation) {
@@ -81,6 +82,19 @@
             if (this.options.autoSlide > 0) {
                 this.startAutoslide();
             }
+        },
+
+        destroy: function () {
+            this.stopAutoslide();
+            // Remove the navigation if created.
+            if (this.options.showControls) {
+                this._wrapper.find('.' + this.options.navigationClass)
+                    .remove();
+            }
+
+            this.element.unwrap().attr('style', this._origStyle);
+            // call to super
+            $.Widget.prototype.destroy.call(this);
         },
 
         _createWrapper: function () {
